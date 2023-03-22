@@ -12,3 +12,5 @@ services:
       - '/home/username/key:/app/key'
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/key/service_credentials.json
+    ports:
+      - '4000:4000'
