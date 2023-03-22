@@ -47,6 +47,7 @@ func main() {
 		// var name = ""
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
+			fmt.Printf("\n")
 			// if index == 2 {
 			// 	substrings := strings.Split(label, " ")
 			// 	joined = strings.Join(substrings, "")
