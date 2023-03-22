@@ -76,6 +76,8 @@ func main() {
 		if msg.Status {
 			ctx.JSON(http.StatusOK, msg)
 		} else {
+			msg.Name = ""
+			msg.NdId = ""
 			ctx.JSON(http.StatusNotFound, msg)
 		}
 	})
