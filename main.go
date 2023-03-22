@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	vision "cloud.google.com/go/vision/apiv1"
 	"github.com/gin-gonic/gin"
@@ -40,21 +41,23 @@ func main() {
 		}
 
 		fmt.Println("Labels: ", labels)
-		// lines := strings.Split(labels[0].Description, "\n")
+		fmt.Println("============================================================")
+		lines := strings.Split(labels[0].Description, "\n")
 		// var joined = ""
 		// var name = ""
-		// for index, label := range lines {
-		// 	if index == 2 {
-		// 		substrings := strings.Split(label, " ")
-		// 		joined = strings.Join(substrings, "")
-		// 		fmt.Println("index == ", index, " ", joined)
-		// 	}
-		// 	if index == 4 {
-		// 		st := strings.Split(label, "ชื่อตัวและชื่อสกุล")
-		// 		fmt.Println("index == ", index, " ", st[1])
-		// 		name = st[1]
-		// 	}
-		// }
+		for index, label := range lines {
+			fmt.Printf("'%d'. '%s'", index, label)
+			// if index == 2 {
+			// 	substrings := strings.Split(label, " ")
+			// 	joined = strings.Join(substrings, "")
+			// 	fmt.Println("index == ", index, " ", joined)
+			// }
+			// if index == 4 {
+			// 	st := strings.Split(label, "ชื่อตัวและชื่อสกุล")
+			// 	fmt.Println("index == ", index, " ", st[1])
+			// 	name = st[1]
+			// }
+		}
 		var msg struct {
 			NdId   string
 			Name   string
