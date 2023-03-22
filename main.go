@@ -69,5 +69,8 @@ func main() {
 		fmt.Println("msg", msg)
 		ctx.JSON(http.StatusOK, msg)
 	})
+	r.GET("/watch", func(ctx *gin.Context) {
+		ctx.String(http.StatusOK, "pass")
+	})
 	r.Run(":4000")
 }
