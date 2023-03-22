@@ -1,0 +1,14 @@
+# Specify the version for docker-compose.yml
+version: "3.8"
+
+# add the serivces needed (postgres,go)
+services:
+  go:
+    container_name: go_vision
+    # build the Dockerfile, alternatively use an image.
+    build:
+      context: .
+    volumes:
+      - '/home/username/key:/app/key'
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/key/service_credentials.json
