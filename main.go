@@ -59,6 +59,7 @@ func main() {
 				if !CheckID(joined) {
 					msg.Status = false
 					ctx.JSON(http.StatusOK, msg)
+					break
 				}
 			}
 
@@ -69,6 +70,7 @@ func main() {
 				} else {
 					msg.Status = false
 					ctx.JSON(http.StatusOK, msg)
+					break
 				}
 			}
 		}
