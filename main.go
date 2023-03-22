@@ -45,11 +45,8 @@ func main() {
 			fmt.Printf("Failed to detect labels: %v", err)
 		}
 
-		fmt.Println("Labels: ", labels)
-		fmt.Println("============================================================")
 		lines := strings.Split(labels[0].Description, "\n")
 		var joined = ""
-		var name = ""
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
 			fmt.Printf("\n")
@@ -58,26 +55,23 @@ func main() {
 				joined = strings.Join(substrings, "")
 				if !CheckID(joined) {
 					msg.Status = false
-					ctx.JSON(http.StatusOK, msg)
-					break
+					return
 				}
+				msg.Status = true
+				msg.NdId = joined
 			}
 
 			if index == 4 {
 				if CheckContains(label) {
 					st := strings.Split(label, "ชื่อตัวและชื่อสกุล")
-					name = st[1]
+					msg.Name = st[1]
 				} else {
 					msg.Status = false
-					ctx.JSON(http.StatusOK, msg)
-					break
+					return
 				}
 			}
 		}
 
-		msg.Name = name
-		msg.NdId = joined
-		msg.Status = true
 		fmt.Println("msg", msg)
 		ctx.JSON(http.StatusOK, msg)
 	})
