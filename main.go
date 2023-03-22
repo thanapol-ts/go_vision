@@ -55,7 +55,7 @@ func main() {
 				joined = strings.Join(substrings, "")
 				if !CheckID(joined) {
 					msg.Status = false
-					return
+					break
 				}
 				msg.Status = true
 				msg.NdId = joined
@@ -67,7 +67,7 @@ func main() {
 					msg.Name = st[1]
 				} else {
 					msg.Status = false
-					return
+					break
 				}
 			}
 		}
