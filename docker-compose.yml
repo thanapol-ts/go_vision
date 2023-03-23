@@ -10,6 +10,7 @@ services:
       context: .
     volumes:
       - '/home/username/key:/app/key'
+      - '/home/username/assets:/assets'
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/key/service_credentials.json
     ports:
