@@ -6,7 +6,7 @@ docker stop go_vision
 
 docker rm go_vision
 
-docker rmi go_vision-go
+docker rmi go_vision-go:latest
 
 docker compose build
 
