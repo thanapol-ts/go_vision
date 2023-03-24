@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github/go_vision/response"
 	"net/http"
 	"os"
 	"strconv"
@@ -12,14 +13,17 @@ import (
 )
 
 func main() {
-	var msg struct {
-		NdId   string
-		Name   string
-		Status bool
+
+	type Infomation struct {
+		IdCard  string `json:"id_card"`
+		Name    string `json:"name"`
+		Address string `json:"address"`
+		Dob     string `json:"dob"`
 	}
 
 	r := gin.Default()
 	r.POST("/check", func(ctx *gin.Context) {
+		var result bool = true
 		client, err := vision.NewImageAnnotatorClient(ctx)
 		if err != nil {
 			fmt.Println("err", err)
@@ -34,90 +38,58 @@ func main() {
 			panic(err)
 		}
 		defer getfile.Close()
-
-		// Decode the image
-		// img, err := jpeg.Decode(getfile)
-		// if err != nil {
-		// 	panic(err)
-		// }
-
-		// // Define the size of the pieces to cut
-		// width := img.Bounds().Max.X
-		// height := 100
-
-		// // Loop over the image and cut it into pieces
-		// for y := 0; y < 100; y += height {
-		// 	for x := 0; x < img.Bounds().Max.X; x += width {
-		// 		// Define the rectangle to cut
-		// 		rect := image.Rect(x, y, x+width, y+height)
-		// 		// Cut the image
-		// 		piece := img.(interface {
-		// 			SubImage(r image.Rectangle) image.Image
-		// 		}).SubImage(rect)
-
-		// 		// Save the piece to a file
-		// 		out, err := os.Create("../assets/" + file.Filename + "-crop.jpg")
-		// 		if err != nil {
-		// 			panic(err)
-		// 		}
-		// 		defer out.Close()
-
-		// 		// Encode the piece and save it to the file
-		// 		jpeg.Encode(out, piece, nil)
-		// 	}
-		// }
-
-		// getFile, err := os.Open("../assets/" + file.Filename + "-crop.jpg")
-		// if err != nil {
-		// 	fmt.Printf("Failed to read file: %v", err)
-		// }
-
-		// defer getFile.Close()
 		image, err := vision.NewImageFromReader(getfile)
 		if err != nil {
 			fmt.Printf("Failed to create image: %v", err)
 		}
-		labels, err := client.DetectTexts(ctx, image, nil, 10)
+		labels, err := client.DetectTexts(ctx, image, nil, 20)
 		if err != nil {
 			fmt.Printf("Failed to detect labels: %v", err)
 		}
-
 		lines := strings.Split(labels[0].Description, "\n")
-		var joined = ""
+		info := Infomation{}
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
 			fmt.Printf("\n")
 			if index == 2 {
 				substrings := strings.Split(label, " ")
-				joined = strings.Join(substrings, "")
-				if !CheckID(joined) {
-					msg.Status = false
+				id := strings.Join(substrings, "")
+				info.IdCard = id
+				if !CheckID(id) {
+					result = false
 					break
 				}
-				msg.Status = true
-				msg.NdId = joined
 			}
 
 			if index == 4 {
 				if CheckContains(label) {
-					st := strings.Split(label, "ชื่อตัวและชื่อสกุล")
-					msg.Name = st[1]
+					st := strings.Replace(label, "ชื่อตัวและชื่อสกุล ", "", 1)
+					info.Name = st
 				} else {
-					msg.Status = false
+					result = false
 					break
 				}
 			}
+
+			if index == 11 || index == 12 {
+				st := strings.Replace(label, "ที่อยู่ ", "", 1)
+				info.Address += st + " "
+			}
+
+			if index == 14 {
+				st := strings.Split(label, "เกิดวันที่")
+				info.Dob = st[1]
+			}
 		}
 
-		fmt.Println("msg", msg)
 		// os.Remove("../assets/" + file.Filename)
-		if msg.Status {
-			ctx.JSON(http.StatusOK, msg)
-		} else {
-			msg.Name = ""
-			msg.NdId = ""
-			ctx.JSON(http.StatusNotFound, msg)
+		res := response.Response{
+			Result:  result,
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    info,
 		}
+		ctx.JSON(http.StatusOK, res)
 	})
 	r.GET("/watch", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "pass")
