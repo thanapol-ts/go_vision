@@ -23,7 +23,7 @@ func main() {
 
 	r := gin.Default()
 	r.POST("/check", func(ctx *gin.Context) {
-		var result bool = true
+		var result bool = false
 		client, err := vision.NewImageAnnotatorClient(ctx)
 		if err != nil {
 			fmt.Println("err", err)
@@ -71,6 +71,12 @@ func main() {
 				st := strings.Replace(label, "เกิดวันที่ ", "", 1)
 				info.Dob = st
 			}
+		}
+
+		if (info != Infomation{}) {
+			result = true
+		} else {
+			result = false
 		}
 
 		// os.Remove("../assets/" + file.Filename)
