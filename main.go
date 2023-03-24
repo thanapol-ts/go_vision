@@ -46,10 +46,10 @@ func main() {
 
 		// Define the size of the pieces to cut
 		width := img.Bounds().Max.X
-		height := 400
+		height := 500
 
 		// Loop over the image and cut it into pieces
-		for y := 0; y < 400; y += height {
+		for y := 0; y < 500; y += height {
 			for x := 0; x < img.Bounds().Max.X; x += width {
 				// Define the rectangle to cut
 				rect := image.Rect(x, y, x+width, y+height)
@@ -90,7 +90,7 @@ func main() {
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
 			fmt.Printf("\n")
-			if index == 2 {
+			if index == 1 {
 				substrings := strings.Split(label, " ")
 				joined = strings.Join(substrings, "")
 				if !CheckID(joined) {
