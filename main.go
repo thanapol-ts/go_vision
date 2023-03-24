@@ -118,7 +118,7 @@ func main() {
 		} else {
 			msg.Name = ""
 			msg.NdId = ""
-			os.Remove("../assets/" + file.Filename)
+			// os.Remove("../assets/" + file.Filename)
 			ctx.JSON(http.StatusNotFound, msg)
 		}
 	})
