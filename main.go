@@ -51,7 +51,7 @@ func main() {
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
 			fmt.Printf("\n")
-			if index == 2 {
+			if index == 2 || index == 1 {
 				substrings := strings.Split(label, " ")
 				id := strings.Join(substrings, "")
 				info.IdCard = id
