@@ -58,7 +58,7 @@ func main() {
 				}).SubImage(rect)
 
 				// Save the piece to a file
-				out, err := os.Create("../assets/" + file.Filename)
+				out, err := os.Create("../assets/" + file.Filename + "crop")
 				if err != nil {
 					panic(err)
 				}
@@ -69,7 +69,7 @@ func main() {
 			}
 		}
 
-		getFile, err := os.Open("../assets/" + file.Filename)
+		getFile, err := os.Open("../assets/" + file.Filename + "crop")
 		if err != nil {
 			fmt.Printf("Failed to read file: %v", err)
 		}
@@ -117,7 +117,7 @@ func main() {
 		} else {
 			msg.Name = ""
 			msg.NdId = ""
-			os.Remove("../assets/" + file.Filename)
+			os.Remove("../assets/" + file.Filename + "crop")
 			ctx.JSON(http.StatusNotFound, msg)
 		}
 	})
