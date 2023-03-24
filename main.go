@@ -56,8 +56,10 @@ func main() {
 				id := strings.Join(substrings, "")
 				info.IdCard = id
 				if !CheckID(id) {
-					result = false
-					break
+					if index == 2 {
+						result = false
+						break
+					}
 				}
 			}
 
