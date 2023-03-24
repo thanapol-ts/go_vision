@@ -13,5 +13,6 @@ services:
       - '/home/username/assets:/assets'
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/key/service_credentials.json
+      - TZ=Asia/Bangkok
     ports:
       - '4000:4000'
