@@ -31,7 +31,6 @@ func main() {
 		if err := ctx.SaveUploadedFile(file, "../assets/"+file.Filename); err != nil {
 			fmt.Println("err", err)
 		}
-
 		getfile, err := os.Open("../assets/" + file.Filename)
 		if err != nil {
 			panic(err)
@@ -46,10 +45,10 @@ func main() {
 
 		// Define the size of the pieces to cut
 		width := img.Bounds().Max.X
-		height := 500
+		height := 100
 
 		// Loop over the image and cut it into pieces
-		for y := 0; y < 500; y += height {
+		for y := 0; y < 100; y += height {
 			for x := 0; x < img.Bounds().Max.X; x += width {
 				// Define the rectangle to cut
 				rect := image.Rect(x, y, x+width, y+height)
@@ -90,7 +89,7 @@ func main() {
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
 			fmt.Printf("\n")
-			if index == 1 {
+			if index == 2 {
 				substrings := strings.Split(label, " ")
 				joined = strings.Join(substrings, "")
 				if !CheckID(joined) {
@@ -118,7 +117,7 @@ func main() {
 		} else {
 			msg.Name = ""
 			msg.NdId = ""
-			// os.Remove("../assets/" + file.Filename)
+			os.Remove("../assets/" + file.Filename)
 			ctx.JSON(http.StatusNotFound, msg)
 		}
 	})
