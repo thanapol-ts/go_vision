@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"image"
-	"image/jpeg"
 	"net/http"
 	"os"
 	"strconv"
@@ -38,44 +36,44 @@ func main() {
 		defer getfile.Close()
 
 		// Decode the image
-		img, err := jpeg.Decode(getfile)
-		if err != nil {
-			panic(err)
-		}
+		// img, err := jpeg.Decode(getfile)
+		// if err != nil {
+		// 	panic(err)
+		// }
 
-		// Define the size of the pieces to cut
-		width := img.Bounds().Max.X
-		height := 100
+		// // Define the size of the pieces to cut
+		// width := img.Bounds().Max.X
+		// height := 100
 
-		// Loop over the image and cut it into pieces
-		for y := 0; y < 100; y += height {
-			for x := 0; x < img.Bounds().Max.X; x += width {
-				// Define the rectangle to cut
-				rect := image.Rect(x, y, x+width, y+height)
-				// Cut the image
-				piece := img.(interface {
-					SubImage(r image.Rectangle) image.Image
-				}).SubImage(rect)
+		// // Loop over the image and cut it into pieces
+		// for y := 0; y < 100; y += height {
+		// 	for x := 0; x < img.Bounds().Max.X; x += width {
+		// 		// Define the rectangle to cut
+		// 		rect := image.Rect(x, y, x+width, y+height)
+		// 		// Cut the image
+		// 		piece := img.(interface {
+		// 			SubImage(r image.Rectangle) image.Image
+		// 		}).SubImage(rect)
 
-				// Save the piece to a file
-				out, err := os.Create("../assets/" + file.Filename + "-crop.jpg")
-				if err != nil {
-					panic(err)
-				}
-				defer out.Close()
+		// 		// Save the piece to a file
+		// 		out, err := os.Create("../assets/" + file.Filename + "-crop.jpg")
+		// 		if err != nil {
+		// 			panic(err)
+		// 		}
+		// 		defer out.Close()
 
-				// Encode the piece and save it to the file
-				jpeg.Encode(out, piece, nil)
-			}
-		}
+		// 		// Encode the piece and save it to the file
+		// 		jpeg.Encode(out, piece, nil)
+		// 	}
+		// }
 
-		getFile, err := os.Open("../assets/" + file.Filename + "-crop.jpg")
-		if err != nil {
-			fmt.Printf("Failed to read file: %v", err)
-		}
+		// getFile, err := os.Open("../assets/" + file.Filename + "-crop.jpg")
+		// if err != nil {
+		// 	fmt.Printf("Failed to read file: %v", err)
+		// }
 
-		defer getFile.Close()
-		image, err := vision.NewImageFromReader(getFile)
+		// defer getFile.Close()
+		image, err := vision.NewImageFromReader(getfile)
 		if err != nil {
 			fmt.Printf("Failed to create image: %v", err)
 		}
@@ -112,7 +110,7 @@ func main() {
 		}
 
 		fmt.Println("msg", msg)
-		// os.Remove("../assets/" + file.Filename + "-crop.jpg")
+		// os.Remove("../assets/" + file.Filename)
 		if msg.Status {
 			ctx.JSON(http.StatusOK, msg)
 		} else {
