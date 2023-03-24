@@ -112,7 +112,7 @@ func main() {
 		}
 
 		fmt.Println("msg", msg)
-		os.Remove("../assets/" + file.Filename + "-crop.jpg")
+		// os.Remove("../assets/" + file.Filename + "-crop.jpg")
 		if msg.Status {
 			ctx.JSON(http.StatusOK, msg)
 		} else {
