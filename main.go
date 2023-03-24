@@ -51,36 +51,25 @@ func main() {
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
 			fmt.Printf("\n")
-			if index == 2 || index == 1 {
-				substrings := strings.Split(label, " ")
-				id := strings.Join(substrings, "")
+			substrings := strings.Split(label, " ")
+			id := strings.Join(substrings, "")
+			if CheckID(id) {
 				info.IdCard = id
-				if !CheckID(id) {
-					if index == 2 {
-						result = false
-						break
-					}
-				}
 			}
 
-			if index == 4 {
-				if CheckContains(label) {
-					st := strings.Replace(label, "ชื่อตัวและชื่อสกุล ", "", 1)
-					info.Name = st
-				} else {
-					result = false
-					break
-				}
+			if CheckContains(label, "ชื่อสกุล") {
+				st := strings.Replace(label, "ชื่อตัวและชื่อสกุล ", "", 1)
+				info.Name = st
 			}
 
-			if index == 11 || index == 12 {
+			if CheckContains(label, "ที่อยู่") {
 				st := strings.Replace(label, "ที่อยู่ ", "", 1)
-				info.Address += st + " "
+				info.Address += st + lines[index+1]
 			}
 
-			if index == 14 {
-				st := strings.Split(label, "เกิดวันที่")
-				info.Dob = st[1]
+			if CheckContains(label, "เกิดวันที่") {
+				st := strings.Replace(label, "เกิดวันที่ ", "", 1)
+				info.Dob = st
 			}
 		}
 
@@ -118,6 +107,6 @@ func CheckID(id string) bool {
 	return (11-sum%11)%10 == int(id[12]-'0')
 }
 
-func CheckContains(input string) bool {
-	return strings.Contains(input, "ชื่อสกุล")
+func CheckContains(input string, condition string) bool {
+	return strings.Contains(input, condition)
 }
