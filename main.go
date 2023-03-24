@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"image"
+	"image/jpeg"
 	"net/http"
 	"os"
 	"strconv"
@@ -30,6 +32,44 @@ func main() {
 			fmt.Println("err", err)
 		}
 
+		getfile, err := os.Open("../assets/" + file.Filename)
+		if err != nil {
+			panic(err)
+		}
+		defer getfile.Close()
+
+		// Decode the image
+		img, err := jpeg.Decode(getfile)
+		if err != nil {
+			panic(err)
+		}
+
+		// Define the size of the pieces to cut
+		width := img.Bounds().Max.X
+		height := 400
+
+		// Loop over the image and cut it into pieces
+		for y := 0; y < 400; y += height {
+			for x := 0; x < img.Bounds().Max.X; x += width {
+				// Define the rectangle to cut
+				rect := image.Rect(x, y, x+width, y+height)
+				// Cut the image
+				piece := img.(interface {
+					SubImage(r image.Rectangle) image.Image
+				}).SubImage(rect)
+
+				// Save the piece to a file
+				out, err := os.Create("../assets/" + file.Filename)
+				if err != nil {
+					panic(err)
+				}
+				defer out.Close()
+
+				// Encode the piece and save it to the file
+				jpeg.Encode(out, piece, nil)
+			}
+		}
+
 		getFile, err := os.Open("../assets/" + file.Filename)
 		if err != nil {
 			fmt.Printf("Failed to read file: %v", err)
@@ -50,7 +90,7 @@ func main() {
 		for index, label := range lines {
 			fmt.Printf("'%d'. '%s'", index, label)
 			fmt.Printf("\n")
-			if index == 1 {
+			if index == 2 {
 				substrings := strings.Split(label, " ")
 				joined = strings.Join(substrings, "")
 				if !CheckID(joined) {
