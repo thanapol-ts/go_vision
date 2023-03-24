@@ -89,7 +89,11 @@ func main() {
 			Message: "success",
 			Data:    info,
 		}
-		ctx.JSON(http.StatusOK, res)
+		if result {
+			ctx.JSON(http.StatusOK, res)
+		} else {
+			ctx.JSON(http.StatusNotFound, res)
+		}
 	})
 	r.GET("/watch", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "pass")
