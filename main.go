@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github/go_vision/response"
+	"image"
+	"image/jpeg"
 	"net/http"
 	"os"
 	"strconv"
@@ -19,9 +21,11 @@ func main() {
 		Name    string `json:"name"`
 		Address string `json:"address"`
 		Dob     string `json:"dob"`
+		Pic     string `json:"pic"`
 	}
 
 	r := gin.Default()
+	r.Static("/assets", "../assets")
 	r.POST("/check", func(ctx *gin.Context) {
 		var result bool = false
 		client, err := vision.NewImageAnnotatorClient(ctx)
@@ -38,11 +42,12 @@ func main() {
 			panic(err)
 		}
 		defer getfile.Close()
-		image, err := vision.NewImageFromReader(getfile)
+
+		ima, err := vision.NewImageFromReader(getfile)
 		if err != nil {
 			fmt.Printf("Failed to create image: %v", err)
 		}
-		labels, err := client.DetectTexts(ctx, image, nil, 20)
+		labels, err := client.DetectTexts(ctx, ima, nil, 20)
 		if err != nil {
 			fmt.Printf("Failed to detect labels: %v", err)
 		}
@@ -72,7 +77,34 @@ func main() {
 				info.Dob = st
 			}
 		}
+		getFile, err := os.Open("../assets/" + file.Filename)
+		if err != nil {
+			fmt.Printf("Failed to read file: %v", err)
+		}
 
+		defer getFile.Close()
+		// Decode the image
+		img, err := jpeg.Decode(getFile)
+		if err != nil {
+			fmt.Printf("Failed to Decode image: %v", err)
+		}
+
+		// Define the size of the pieces to cut
+		width := img.Bounds().Dx()
+		height := img.Bounds().Dy()
+		cropWidth := width / 4
+		cropHeight := height / 2
+		rect := image.Rect(width-cropWidth, height-cropHeight-100, width, height)
+		piece := img.(interface {
+			SubImage(r image.Rectangle) image.Image
+		}).SubImage(rect)
+		out, err := os.Create("../assets/" + file.Filename + "-crop.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer out.Close()
+		jpeg.Encode(out, piece, nil)
+		info.Pic = "http://shop.ttshop-demo.com:4000/assets/" + file.Filename + "-crop.jpg"
 		if (info != Infomation{}) {
 			result = true
 		} else {
