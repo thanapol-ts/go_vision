@@ -105,6 +105,7 @@ func main() {
 		defer out.Close()
 		jpeg.Encode(out, piece, nil)
 		info.Pic = "http://159.65.9.80:4000/assets/" + file.Filename + "-crop.jpg"
+		fmt.Print("info ", info)
 		if (info != Infomation{}) {
 			result = true
 		} else {
