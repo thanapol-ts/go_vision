@@ -107,18 +107,23 @@ func main() {
 		info.Pic = "http://159.65.9.80:4000/assets/" + file.Filename + "-crop.jpg"
 		fmt.Print("info ", info)
 		if info.IdCard == "" {
+			fmt.Print("info.IdCard ", info.IdCard)
 			result = false
 		}
 		if info.Address == "" {
+			fmt.Print("info.Address ", info.Address)
 			result = false
 		}
 		if info.Dob == "" {
+			fmt.Print("info.Dob ", info.Dob)
 			result = false
 		}
 		if info.Name == "" {
+			fmt.Print("info.Name ", info.Name)
 			result = false
 		}
 		if info.Pic == "" {
+			fmt.Print("info.Pic ", info.Pic)
 			result = false
 		}
 		// os.Remove("../assets/" + file.Filename)
