@@ -27,7 +27,7 @@ func main() {
 	r := gin.Default()
 	r.Static("/assets", "../assets")
 	r.POST("/check", func(ctx *gin.Context) {
-		var result bool = false
+		var result bool = true
 		client, err := vision.NewImageAnnotatorClient(ctx)
 		if err != nil {
 			fmt.Println("err", err)
