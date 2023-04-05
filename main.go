@@ -106,12 +106,21 @@ func main() {
 		jpeg.Encode(out, piece, nil)
 		info.Pic = "http://159.65.9.80:4000/assets/" + file.Filename + "-crop.jpg"
 		fmt.Print("info ", info)
-		if (info != Infomation{}) {
-			result = true
-		} else {
+		if info.IdCard == "" {
 			result = false
 		}
-
+		if info.Address == "" {
+			result = false
+		}
+		if info.Dob == "" {
+			result = false
+		}
+		if info.Name == "" {
+			result = false
+		}
+		if info.Pic == "" {
+			result = false
+		}
 		// os.Remove("../assets/" + file.Filename)
 		res := response.Response{
 			Result:  result,
